@@ -4,19 +4,20 @@ import edu.pdx.cs410J.AbstractFlight;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Flight class inherits from AbstractFlight
  */
-public class Flight extends AbstractFlight {
+public class Flight extends AbstractFlight implements Comparable {
     private int flightNumber;
     private String src;
     private Date departTime;
     private String dest;
     private Date arriveTime;
-    private DateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+    private DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                                                               DateFormat.SHORT, Locale.US);
 
     /**
      * Sets the Flight variables to the given parameters.
@@ -91,7 +92,12 @@ public class Flight extends AbstractFlight {
      * @return returns the arriving date and time
      */
     public String getArrivalString() {
-
         return format.format(arriveTime);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int srcAirport = this.src.compareTo(((Flight) o).src);
+        return srcAirport == 0 ? this.departTime.compareTo(((Flight) o).departTime) : srcAirport;
     }
 }

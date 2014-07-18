@@ -4,13 +4,14 @@ import edu.pdx.cs410J.AbstractAirline;
 import edu.pdx.cs410J.AbstractFlight;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Airline class inherits from AbstractAirline
  */
 public class Airline extends AbstractAirline {
     private String name; //Name of the airline
-    private ArrayList<AbstractFlight> flights; //List of flights from the airline
+    private ArrayList<Flight> flights; //List of flights from the airline
 
     /**
      * Initializes name of airline with the given string and initializes empty list of flights.
@@ -34,7 +35,8 @@ public class Airline extends AbstractAirline {
      * @param flight add a flight to the list of Flight
      */
     public void addFlight(AbstractFlight flight) {
-        flights.add(flight);
+        flights.add((Flight) flight);
+        Collections.sort(flights);
     }
 
     /**

@@ -19,8 +19,6 @@ import java.util.Collection;
  */
 public class Project3 {
 
-    static final String AIRPORT_CODE_PATTERN = "[A-Z]{3}";
-
     /**
      * Creates an instance of one Airline. Depending on the options supplied, it can print to standard out
      * and/or read/write to a text file.
@@ -41,7 +39,7 @@ public class Project3 {
         TextParser parser;              //for reading in from file
         TextDumper dumper = null;       //for possible writing out
         boolean willPrint = false;      //for printing to standard out
-        ArrayList<String> argList;
+        ArrayList<String> argList;      //for converting args to ArrayList
 
         if (args.length == 0) { //check if there are any arguments at all
             System.err.println("Missing command line arguments. Add the argument \"-README\"" +
@@ -55,19 +53,19 @@ public class Project3 {
             }
         }
 
-        argList = new ArrayList<>(Arrays.asList(args));
-        for (int i = 0; i < argList.size(); ++i) { //check for other options supplied and calculate offset
+        argList = new ArrayList<>(Arrays.asList(args)); //convert args to ArrayList for removing options
+        for (int i = 0; i < argList.size(); ++i) { //check for other options supplied
             if (argList.get(i).contains("-print")) {
                 willPrint = true;
-                argList.remove("-print");
-                --i;
+                argList.remove("-print"); //remove option from arg list
+                --i; //decrement i for offset of removal
             }
             else if (argList.get(i).contains("-textFile")) {
-                String fileName = null;
+                String fileName = null; //for the name of the file
                 try {
-                    fileName = argList.get(i + 1);
+                    fileName = argList.get(i + 1);     //set the next element in the list as the file name
                     parser = new TextParser(fileName); //set TextParser with name from next argument
-                    airline = parser.parse();                     //parse file and return airline
+                    airline = parser.parse();          //parse file and return airline
                 }
                 catch (ParserException e) { //catch if filename does not exist or is missing flight information
                     if (e.getMessage().contains("File '" + fileName + "' not found!")) { //if file is missing,
@@ -86,17 +84,17 @@ public class Project3 {
                         System.exit(2);
                     }
                 }
-                catch (IndexOutOfBoundsException e) {
+                catch (IndexOutOfBoundsException e) { //for the case that -textFile is the last argument
                     System.err.println("Missing file name after -textFile argument");
                     displayUsage();
                 }
-                argList.remove("-textFile");
-                argList.remove(fileName);
+                argList.remove("-textFile"); //remove both option
+                argList.remove(fileName);    //and filename
                 --i;
                 dumper = new TextDumper(fileName); //create new TextDumper for later writing out
             }
         }
-        args = argList.toArray(new String[argList.size()]);
+        args = argList.toArray(new String[argList.size()]); //convert arg list back to a String array
         if (args.length < 10) { //if there are not enough arguments
             System.err.println("Missing command line arguments. Add the argument \"-README\"" +
                                " to display program help");
@@ -161,9 +159,8 @@ public class Project3 {
                                " represented as an integer number");
             displayUsage();
         }
-        if (!args[2].matches(AIRPORT_CODE_PATTERN)) { //Departure airport code
-            System.err.println("Argument `" + args[2] + "': Airport codes must be" +
-                               " in the format of Three (3) upper-case letters");
+        if (AirportNames.getName(args[2]) == null) { //Departure airport code
+            System.err.println("Argument `" + args[2] + "': Airport code is not valid");
             displayUsage();
         }
         try { //Departure date
@@ -189,9 +186,8 @@ public class Project3 {
             System.err.println("Argument `" + args[5] + "': Must be either am or pm");
             displayUsage();
         }
-        if (!args[6].matches(AIRPORT_CODE_PATTERN)) { //Arrival airport code
-            System.err.println("Argument `" + args[6] + "': Airport codes must be" +
-                               " in the format of Three (3) upper-case letters");
+        if (AirportNames.getName(args[6]) == null) { //Arrival airport code
+            System.err.println("Argument `" + args[6] + "': Airport code is not valid");
             displayUsage();
         }
         try { //Arrival date

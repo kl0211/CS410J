@@ -2,6 +2,7 @@ package edu.pdx.cs410J.rwerf2;
 
 import edu.pdx.cs410J.AbstractAirline;
 import edu.pdx.cs410J.AirlineParser;
+import edu.pdx.cs410J.AirportNames;
 import edu.pdx.cs410J.ParserException;
 
 import java.io.BufferedReader;
@@ -9,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * TextParser class implements AirlineParser
@@ -39,7 +40,8 @@ public class TextParser implements AirlineParser{
         Airline airline;
         int parsedFlightNumber;
         String flightNumber, src, departTime, dest, arriveTime; //String destinations for BufferedReader
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a"); //Date Format for date and time
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
+                                                               Locale.US); //Date Format for date and time
         dateFormat.setLenient(false); //Follow format exactly
 
         try {
@@ -60,7 +62,7 @@ public class TextParser implements AirlineParser{
                 if (src == null) {
                     throw new ParserException("FILE READ ERROR: MISSING DEPARTURE AIRPORT CODE");
                 }
-                if (!src.matches(Project3.AIRPORT_CODE_PATTERN)) {
+                if (AirportNames.getName(src) == null) {
                     throw new ParserException("FILE READ ERROR: '" + src + "' IS NOT A VALID AIRPORT CODE");
                 }
                 departTime = br.readLine(); //read in departing date and time
@@ -76,7 +78,7 @@ public class TextParser implements AirlineParser{
                 if (dest == null) {
                     throw new ParserException("FILE READ ERROR: MISSING ARRIVAL AIRPORT CODE");
                 }
-                if (!dest.matches(Project3.AIRPORT_CODE_PATTERN)) {
+                if (AirportNames.getName(dest) == null) {
                     throw new ParserException("FILE READ ERROR: '" + dest + "' IS NOT A VALID AIRPORT CODE");
                 }
                 arriveTime = br.readLine(); //read in arriving date and time

@@ -180,7 +180,7 @@ public class Project3Test extends InvokeMainTestCase {
     @Test
     public void testSuccessfulRead() throws ParserException, IOException {
         airline = new Airline("Foo Airlines");
-        airline.addFlight(new Flight(101, "PDX", "1/1/2000 12:00 am", "SEA", "1/1/2000 12:40 am"));
+        airline.addFlight(new Flight(101, "PDX", "1/1/2001 12:00 am", "SEA", "1/1/2001 12:40 am"));
         dumper.dump(airline);
         AbstractAirline test = parser.parse();
         deleteFile();
@@ -242,9 +242,10 @@ public class Project3Test extends InvokeMainTestCase {
 
     @Test
     public void testBadAirportCodeArgument() {
-        MainMethodResult result = invokeMain("-textFile", fileName, "-print", "Foo Airlines", "101", "PDx", "1/1/2000", "12:00", "am", "SEA", "1/1/2000", "12:40", "aM");
+        deleteFile();
+        MainMethodResult result = invokeMain("-textFile", fileName, "-print", "Foo Airlines", "101", "APV", "1/1/2000", "12:00", "am", "SEA", "1/1/2000", "12:40", "aM");
         assertEquals(new Integer(1), result.getExitCode());
-        assertTrue(result.getErr().contains("Airport codes must be in the format of Three (3) upper-case letters"));
+        assertTrue(result.getErr().contains("Argument `APV': Airport code is not valid"));
         deleteFile();
     }
 
@@ -275,12 +276,12 @@ public class Project3Test extends InvokeMainTestCase {
 
     @Test
     public void testSuccessfulParseArgs() {
-        String [] args = {"Foo Airlines", "101", "PDX", "1/1/2001", "11:50", "pm", "SEA", "01/02/2001", "12:30", "am"};
+        String [] args = {"Foo Airlines", "101", "PDX", "1/1/2000", "11:50", "pm", "SEA", "01/02/2001", "12:30", "am"};
         Flight flight = Project3.parseArgs(args);
         assertEquals(flight.getNumber(), 101);
         assertEquals(flight.getSource(), "PDX");
-        assertEquals(flight.getDepartureString(), "01/01/2001 11:50 PM");
+        assertEquals(flight.getDepartureString(), "1/1/00 11:50 PM");
         assertEquals(flight.getDestination(), "SEA");
-        assertEquals(flight.getArrivalString(), "01/02/2001 12:30 AM");
+        assertEquals(flight.getArrivalString(), "1/2/01 12:30 AM");
     }
 }
