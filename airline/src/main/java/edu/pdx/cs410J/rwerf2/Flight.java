@@ -61,6 +61,11 @@ public class Flight extends AbstractFlight implements Comparable {
         return src;
     }
 
+    /**
+     * returns the departing date and time
+     * @return
+     *        returns the departure time in DATE format
+     */
     @Override
     public Date getDeparture() {
         return departTime;
@@ -82,6 +87,11 @@ public class Flight extends AbstractFlight implements Comparable {
         return dest;
     }
 
+    /**
+     * returns the arriving date and time
+     * @return
+     *        returns the arriving time in DATE format
+     */
     @Override
     public Date getArrival() {
         return arriveTime;
@@ -95,6 +105,14 @@ public class Flight extends AbstractFlight implements Comparable {
         return format.format(arriveTime);
     }
 
+    /**
+     * Compares two Flight objects. First compares the src Strings,
+     * if they are equal, return the result of comparing the departure times.
+     * @param o The Flight object to compare with
+     * @return
+     *        returns 0 if both are equal, positive int if this is greater
+     *        and negative int if o is greater
+     */
     @Override
     public int compareTo(Object o) {
         int srcAirport = this.src.compareTo(((Flight) o).src);

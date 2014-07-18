@@ -38,6 +38,7 @@ public class Project3 {
         AbstractAirline airline = null; //airline will either be new or from parsed text file
         TextParser parser;              //for reading in from file
         TextDumper dumper = null;       //for possible writing out
+        PrettyPrinter printer = null;   //for printing the airline in a nice format to stdout or file
         boolean willPrint = false;      //for printing to standard out
         ArrayList<String> argList;      //for converting args to ArrayList
 
@@ -63,6 +64,8 @@ public class Project3 {
             else if (argList.get(i).contains("-textFile")) {
                 String fileName = null; //for the name of the file
                 try {
+                    if (argList.get(i + 1).startsWith("-")) //if the fileName is actually just another option
+                        throw new IndexOutOfBoundsException();
                     fileName = argList.get(i + 1);     //set the next element in the list as the file name
                     parser = new TextParser(fileName); //set TextParser with name from next argument
                     airline = parser.parse();          //parse file and return airline
@@ -93,6 +96,20 @@ public class Project3 {
                 --i;
                 dumper = new TextDumper(fileName); //create new TextDumper for later writing out
             }
+            else if (argList.get(i).contains("-pretty")) {
+                try {
+                    if (argList.get(i + 1).startsWith("-")) //if the fileName is actually just another option
+                        throw new IndexOutOfBoundsException();
+                    String fileName = argList.get(i + 1);
+                    printer = new PrettyPrinter(fileName);
+                    argList.remove("-pretty");
+                    argList.remove(fileName);
+                    --i;
+                } catch (IndexOutOfBoundsException e) {
+                    System.err.println("Missing file name after -pretty argument");
+                    displayUsage();
+                }
+            }
         }
         args = argList.toArray(new String[argList.size()]); //convert arg list back to a String array
         if (args.length < 10) { //if there are not enough arguments
@@ -118,6 +135,15 @@ public class Project3 {
             if (willPrint) { //if -print is given
                 printAirline((Airline) airline);
             }
+            if (printer != null) {
+                try {
+                    printer.dump(airline);
+                } catch (IOException e) {
+                    System.err.println("ERROR WRITING TO FILE");
+                    e.printStackTrace();
+                    System.exit(3);
+                }
+            }
             if (dumper != null) { //if -textFile was given, write airline to specified file.
                 try {
                     dumper.dump(airline);
@@ -135,8 +161,8 @@ public class Project3 {
      * Parses the list of command-line arguments. The offset determines which element of the array the flight
      * arguments start at (depending on which options were used and how many). For each argument that the
      * program requires, the String will be checked if they are entered in the correct format. For example,
-     * the Flight number is testes if it can be parsed as an int. The Airport code is checked using regular
-     * expressions. The Date and Time are checked by attempting to convert them to a Date format. If all
+     * the Flight number is testes if it can be parsed as an int. The Airport code is checked by looking in the
+     * AirportNames map. The Date and Time are checked by attempting to convert them to a Date format. If all
      * arguments are valid, the function will return a new Flight object with the given arguments.
      *
      * @param args
@@ -148,7 +174,7 @@ public class Project3 {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         DateFormat timeFormat = new SimpleDateFormat("hh:mm");
         DateFormat AMPMFormat = new SimpleDateFormat("a");
-        dateFormat.setLenient(false);
+        dateFormat.setLenient(false); //use strict formatting
         timeFormat.setLenient(false);
         AMPMFormat.setLenient(false);
 
@@ -159,7 +185,7 @@ public class Project3 {
                                " represented as an integer number");
             displayUsage();
         }
-        if (AirportNames.getName(args[2]) == null) { //Departure airport code
+        if (AirportNames.getName(args[2].toUpperCase()) == null) { //Departure airport code
             System.err.println("Argument `" + args[2] + "': Airport code is not valid");
             displayUsage();
         }
@@ -186,7 +212,7 @@ public class Project3 {
             System.err.println("Argument `" + args[5] + "': Must be either am or pm");
             displayUsage();
         }
-        if (AirportNames.getName(args[6]) == null) { //Arrival airport code
+        if (AirportNames.getName(args[6].toUpperCase()) == null) { //Arrival airport code
             System.err.println("Argument `" + args[6] + "': Airport code is not valid");
             displayUsage();
         }
@@ -237,8 +263,8 @@ public class Project3 {
      */
     static void displayReadme() {
         System.out.println("*************************************************************\n" +
-                           "edu.pdx.cs410J.rwerf2.Project2 \"Airline\" By Rob Werfelmann.\n" +
-                           "Project2 is a small application which creates an Airline     \n" +
+                           "edu.pdx.cs410J.rwerf2.Project3 \"Airline\" By Rob Werfelmann.\n" +
+                           "Project3 is a small application which creates an Airline     \n" +
                            "object and adds an instance of a Flight to that Airline.     \n" +
                            "Currently it supports adding one Flight to one Airline which \n" +
                            "can printed to standard out and external files.              \n\n" +
@@ -255,9 +281,9 @@ public class Project3 {
                            "it will be created. If the file does exist, then the Airline\n" +
                            "that is read from the file must match the Airline that is being\n" +
                            "added. If it matches, the new flight will be added to the file.\n" +
-                           "Example Usage:\n java edu.pdx.cs410J.rwerf2.Project1 -print " +
+                           "Example Usage:\n java edu.pdx.cs410J.rwerf2.Project3 -print " +
                            "\"Alaska Airlines\" \\\n 101 PDX 7/4/2014 12:00 SEA 07/04/2014 12:40\n\n" +
-                           " java edu.pdx.cs410J.rwerf2.Project2 -textFile united -print \\\n" +
+                           " java edu.pdx.cs410J.rwerf2.Project3 -textFile united -print \\\n" +
                            " \"United Airlines\" 2453 LAX 12/12/2013 00:40 PDX 12/12/2013 2:40\n" +
                            "***************************************************************");
         System.exit(0);
@@ -267,8 +293,8 @@ public class Project3 {
      * Displays the program usage in the case of a bad argument. Exits with code 1.
      */
     static void displayUsage() {
-        System.out.println("\nusage: java edu.pdx.cs410J.rwerf2.Project1 [-print] [-README]" +
-                           " [-textFile filename] name" +
+        System.out.println("\nusage: java edu.pdx.cs410J.rwerf2.Project3 [-print] [-README]" +
+                           " [-textFile filename] [-pretty -|filename] name" +
                            " flightNumber src departTime dest arriveTime\n\n" +
                            "name - The name of the airline\n" +
                            "flightNumber - The flight number as an integer number\n" +
@@ -276,10 +302,12 @@ public class Project3 {
                            "departTime - Departure date and time (24-hour time)\n" +
                            "dest - Three-letter code of the arrival airport\n" +
                            "arriveTime - Arrival date and time (24-hour time)\n" +
+                           "-pretty - Where to write the Airline's flights to\n" +
+                           "          in a nice format (stdout with - for filename)\n" +
                            "-textFile - Where to read/write the airline info\n" +
                            "-print - Prints the airline's flight list information\n" +
                            "-README - Prints the Readme of this program and exits\n\n" +
-                           "Date and time must be entered in the format: mm/dd/yyyy hh:mm\n" +
+                           "Date and time must be entered in the format: mm/dd/yyyy hh:mm am/pm\n" +
                            "If using -textFile, the Airline being added in through the argument\n" +
                            "list must match the Airline in the external file, if it exists\n");
         System.exit(1);

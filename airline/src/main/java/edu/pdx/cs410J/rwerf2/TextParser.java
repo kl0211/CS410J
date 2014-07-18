@@ -62,7 +62,7 @@ public class TextParser implements AirlineParser{
                 if (src == null) {
                     throw new ParserException("FILE READ ERROR: MISSING DEPARTURE AIRPORT CODE");
                 }
-                if (AirportNames.getName(src) == null) {
+                if (AirportNames.getName(src.toUpperCase()) == null) {
                     throw new ParserException("FILE READ ERROR: '" + src + "' IS NOT A VALID AIRPORT CODE");
                 }
                 departTime = br.readLine(); //read in departing date and time

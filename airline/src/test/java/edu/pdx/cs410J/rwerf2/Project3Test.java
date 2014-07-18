@@ -12,7 +12,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Tests the functionality in the {@link edu.pdx.cs410J.rwerf2.Project2} main class.
+ * Tests the functionality in the {@link edu.pdx.cs410J.rwerf2.Project3} main class.
  */
 public class Project3Test extends InvokeMainTestCase {
 
@@ -91,12 +91,12 @@ public class Project3Test extends InvokeMainTestCase {
 
     @Test
     public void testReadWithBadAirportCode() throws IOException {
-        createFile("Foo Airlines\n101\nPdX\n01/01/2001 01:00\nSEA\n01/01/2001 01:40");
+        createFile("Foo Airlines\n101\napv\n01/01/2001 01:00 pm\nSEA\n01/01/2001 01:40 pm");
         try {
             AbstractAirline notUsed = parser.parse();
             assertTrue(false);
         } catch (ParserException e) {
-            assertEquals(e.getMessage(), "FILE READ ERROR: 'PdX' IS NOT A VALID AIRPORT CODE");
+            assertEquals(e.getMessage(), "FILE READ ERROR: 'apv' IS NOT A VALID AIRPORT CODE");
         }
         deleteFile();
     }
@@ -200,6 +200,18 @@ public class Project3Test extends InvokeMainTestCase {
     }
 
     @Test
+    public void testValidLowerCaseAirportCode() {
+        MainMethodResult result = invokeMain("Foo Airlines", "101", "pdx", "1/1/2000", "12:00", "AM", "SEA", "1/1/2000", "12:40", "pM");
+        assertEquals(new Integer(0), result.getExitCode());
+    }
+
+    @Test
+    public void testValidMixedCaseAirportCode() {
+        MainMethodResult result = invokeMain("Foo Airlines", "101", "Pdx", "1/1/2000", "12:00", "AM", "SEA", "1/1/2000", "12:40", "pM");
+        assertEquals(new Integer(0), result.getExitCode());
+    }
+
+    @Test
     public void testValidArgumentsWithPrint() {
         MainMethodResult result = invokeMain("-print", "Foo Airlines", "101", "PDX", "1/1/2000", "12:00", "Am", "SEA", "1/1/2000", "12:40", "Pm");
         assertEquals(new Integer(0), result.getExitCode());
@@ -271,6 +283,76 @@ public class Project3Test extends InvokeMainTestCase {
         MainMethodResult result = invokeMain("-textFile", fileName, "-print");
         assertEquals(new Integer(1), result.getExitCode());
         assertTrue(result.getErr().contains("Missing command line arguments."));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingPrettyFileNameArgument() {
+        MainMethodResult result = invokeMain("-pretty");
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing file name after -pretty argument"));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingArgumentsWithPrettyPrintOption() {
+        MainMethodResult result = invokeMain("-pretty", fileName);
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing command line arguments."));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingArgumentsWithPrettyPrintAndPrintOption() {
+        deleteFile();
+        MainMethodResult result = invokeMain("-pretty", fileName, "-print");
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing command line arguments."));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingArgumentsWithPrettyPrintAndPrintOptionAndTextFileMissingFileName() {
+        deleteFile();
+        MainMethodResult result = invokeMain("-pretty", fileName, "-print", "-textFile");
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing file name after -textFile argument"));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingArgumentsWithPrettyPrintAndPrintOptionAndTextFile() {
+        deleteFile();
+        MainMethodResult result = invokeMain("-pretty", fileName, "-print", "-textFile", fileName);
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing command line arguments."));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingArgumentsWithPrettyPrintMissingFileNameAndTextFile() {
+        deleteFile();
+        MainMethodResult result = invokeMain("-pretty", fileName, "-textFile", fileName);
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing command line arguments."));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingFileNameAfterPretty() {
+        deleteFile();
+        MainMethodResult result = invokeMain("-pretty", "-textFile", fileName, "Foo Airlines", "101", "PDX", "1/1/2000", "11:50", "pm", "SEA", "01/02/2001", "12:30", "am");
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing file name after -pretty argument"));
+        deleteFile();
+    }
+
+    @Test
+    public void testMissingFileNameAfterTextFile() {
+        deleteFile();
+        MainMethodResult result = invokeMain("-textFile", "-pretty", fileName, "Foo Airlines", "101", "PDX", "1/1/2000", "11:50", "pm", "SEA", "01/02/2001", "12:30", "am");
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("Missing file name after -textFile argument"));
         deleteFile();
     }
 

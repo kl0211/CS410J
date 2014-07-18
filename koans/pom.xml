@@ -26,10 +26,10 @@
       </roles>
     </developer>
     <developer>
-      <id>YOU</id>
-      <name>Your name here</name>
-      <email>you@youremail.com</email>
-      <url>http://www.cs.pdx.edu/~YOU</url>
+      <id>rwerf2</id>
+      <name>Rob Werfelmann</name>
+      <email>rwerf2@pdx.edu</email>
+      <url>http://www.cs.pdx.edu/~rwerf2</url>
       <organization>PSU Department of Computer Science</organization>
       <organizationUrl>http://www.cs.pdx.edu</organizationUrl>
       <roles>
