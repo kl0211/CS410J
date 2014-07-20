@@ -24,11 +24,12 @@ public class Project3 {
      * and/or read/write to a text file.
      * First checks if there are any arguments, and exits if there are none. Then checks the arguments for
      * -README and displays and exits the readme if present, regardless if there are any other arguments.
-     * if -README is not present, -print and -textFile are then checked. If -textFile is present, it will
+     * if -README is not present, -print, -textFile and -pretty are then checked. If -textFile is present, it will
      * attempt to read from the file specified and check if the airline being entered in matches the Airline
      * the file is associated with or will create a new file. After options have been discovered, the function
      * will then check for correct number of arguments and then parse them into either the Airline that
-     * was read from the file, or add them to a new Airline. The airline, with its flights will then be
+     * was read from the file, or add them to a new Airline. If -pretty is supplied, a new PrettyPrinter object
+     * is created for later writing out to file or standard out. The airline, with its flights will then be
      * printed and/or written to file or the program will just simply exit.
      *
      * @param args
@@ -269,7 +270,7 @@ public class Project3 {
                            "Currently it supports adding one Flight to one Airline which \n" +
                            "can printed to standard out and external files.              \n\n" +
                            "It supports the the following options:\n -print, -README," +
-                           "-textFile\n\n" +
+                           "-textFile, -pretty\n\n" +
                            "-print will print out the flights of an added airline after  \n" +
                            "creating the airline object and adding the flight information.\n" +
                            "This includes printing out flights which were written to file\n" +
@@ -281,10 +282,14 @@ public class Project3 {
                            "it will be created. If the file does exist, then the Airline\n" +
                            "that is read from the file must match the Airline that is being\n" +
                            "added. If it matches, the new flight will be added to the file.\n" +
+                           "-pretty will print the added airline's flight information to \n" +
+                           "a file or standard out in a more aesthetically pleasing format\n" +
                            "Example Usage:\n java edu.pdx.cs410J.rwerf2.Project3 -print " +
-                           "\"Alaska Airlines\" \\\n 101 PDX 7/4/2014 12:00 SEA 07/04/2014 12:40\n\n" +
+                           "\"Alaska Airlines\" \\\n 101 PDX 7/4/2014 12:00 pm SEA 07/04/2014 12:40 pm\n\n" +
                            " java edu.pdx.cs410J.rwerf2.Project3 -textFile united -print \\\n" +
-                           " \"United Airlines\" 2453 LAX 12/12/2013 00:40 PDX 12/12/2013 2:40\n" +
+                           " \"United Airlines\" 2453 LAX 12/12/2013 12:40 am PDX 12/12/2013 2:40 am\n\n" +
+                           " java edu.pdx.cs410J.rwerf2.Project3 -pretty - -textFile alaska \\\n" +
+                           " \"Alaska Airlines\" 463 DCA 2/28/2014 11:50 pm JFK 3/1/2014 2:20 am\n" +
                            "***************************************************************");
         System.exit(0);
     }
@@ -299,9 +304,9 @@ public class Project3 {
                            "name - The name of the airline\n" +
                            "flightNumber - The flight number as an integer number\n" +
                            "src - Three-letter code of the departure airport\n" +
-                           "departTime - Departure date and time (24-hour time)\n" +
+                           "departTime - Departure date and time and meridian (12-hour time)\n" +
                            "dest - Three-letter code of the arrival airport\n" +
-                           "arriveTime - Arrival date and time (24-hour time)\n" +
+                           "arriveTime - Arrival date and time and meridian (12-hour time)\n" +
                            "-pretty - Where to write the Airline's flights to\n" +
                            "          in a nice format (stdout with - for filename)\n" +
                            "-textFile - Where to read/write the airline info\n" +
