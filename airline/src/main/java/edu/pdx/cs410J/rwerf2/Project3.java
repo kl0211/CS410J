@@ -4,7 +4,6 @@ import edu.pdx.cs410J.AbstractAirline;
 import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.AirportNames;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -72,15 +71,8 @@ public class Project3 {
                     airline = parser.parse();          //parse file and return airline
                 }
                 catch (ParserException e) { //catch if filename does not exist or is missing flight information
-                    if (e.getMessage().contains("File '" + fileName + "' not found!")) { //if file is missing,
-                        File file = new File(fileName);                                  //create a new one
-                        try {
-                            file.createNewFile();
-                        } catch (IOException e1) { //For out-of-space issues
-                            System.err.println("ERROR CREATING NEW FILE");
-                            e1.printStackTrace();
-                            System.exit(2);
-                        }
+                    if (e.getMessage().contains("File '" + fileName + "' not found!")) { //if file is missing
+                        System.out.println("Will write to a new file");
                     }
                     else { //if the thrown ParserException was an error in reading in the existing file
                            //than the file was malformed
@@ -99,7 +91,8 @@ public class Project3 {
             }
             else if (argList.get(i).contains("-pretty")) {
                 try {
-                    if (argList.get(i + 1).startsWith("-")) //if the fileName is actually just another option
+                    if (argList.get(i + 1).startsWith("-") &&
+                        !argList.get(i + 1).endsWith("-")) //if the fileName is actually just another option
                         throw new IndexOutOfBoundsException();
                     String fileName = argList.get(i + 1);
                     printer = new PrettyPrinter(fileName);
@@ -127,6 +120,10 @@ public class Project3 {
             if (airline != null && !airline.getName().equals(args[0])) { //If the name of the airline in the file
                                                                               //does not match what is being supplied
                 System.err.println("Filename is already associated with airline '" + airline.getName() + "'");
+                displayUsage();
+            }
+            if (printer != null && dumper != null && printer.getFileName().equals(dumper.getFileName())) {
+                System.err.println("-pretty and -textFile cannot be written to the same file");
                 displayUsage();
             }
             if (airline == null) { //if airline was not already created by the file read in
@@ -241,8 +238,8 @@ public class Project3 {
             displayUsage();
         }
         //If all tests pass, return a new flight
-        return new Flight(Integer.parseInt(args[1]), args[2],
-                          args[3] + " " + args[4] + " " + args[5], args[6],
+        return new Flight(Integer.parseInt(args[1]), args[2].toUpperCase(),
+                          args[3] + " " + args[4] + " " + args[5], args[6].toUpperCase(),
                           args[7] + " " + args[8] + " " + args[9]);
     }
 

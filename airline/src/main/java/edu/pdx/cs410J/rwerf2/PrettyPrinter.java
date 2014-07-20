@@ -28,6 +28,15 @@ public class PrettyPrinter implements AirlineDumper {
     }
 
     /**
+     * Returns the filename string
+     * @return
+     *        the name of the file to be written to
+     */
+    public String getFileName() {
+        return this.file;
+    }
+
+    /**
      * Dumps an airline to some destination (file) or stdout if filename is "-".
      *
      * @param airline

@@ -357,6 +357,15 @@ public class Project3Test extends InvokeMainTestCase {
     }
 
     @Test
+    public void testPrettyAndTextFileToSameFileName() {
+        deleteFile();
+        MainMethodResult result = invokeMain("-textFile", fileName, "-pretty", fileName, "Foo Airlines", "101", "PDX", "1/1/2000", "11:50", "pm", "SEA", "01/02/2001", "12:30", "am");
+        assertEquals(new Integer(1), result.getExitCode());
+        assertTrue(result.getErr().contains("-pretty and -textFile cannot be written to the same file"));
+        deleteFile();
+    }
+
+    @Test
     public void testSuccessfulParseArgs() {
         String [] args = {"Foo Airlines", "101", "PDX", "1/1/2000", "11:50", "pm", "SEA", "01/02/2001", "12:30", "am"};
         Flight flight = Project3.parseArgs(args);
