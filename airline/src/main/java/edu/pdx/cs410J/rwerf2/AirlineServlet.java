@@ -40,7 +40,14 @@ public class AirlineServlet extends HttpServlet
         String src = getParameter("src", request);
         String dest = getParameter("dest", request);
         PrintWriter pw = response.getWriter();
-        if (data.get(name) == null)
+        if (name == null) {
+            pw.println("Server contains the following airlines:");
+            for (String airline: data.keySet()) {
+                pw.println(airline);
+            }
+            pw.flush();
+        }
+        else if (data.get(name) == null)
             pw.println("Airline \"" + name + "\" not found");
         else if (src != null && dest != null) {
             pw.println(prettyPrint(this.data.get(name), src, dest));
