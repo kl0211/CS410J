@@ -5,20 +5,54 @@ import edu.pdx.cs410J.AbstractAirline;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
-public class Airline extends AbstractAirline
-{
-  private Collection<AbstractFlight> flights = new ArrayList<AbstractFlight>();
+/**
+ * Airline class inherits from AbstractAirline
+ */
+public class Airline extends AbstractAirline {
+    private String name; //Name of the airline
+    private ArrayList<Flight> flights; //List of flights from the airline
 
-  public String getName() {
-    return "Air CS410J";
-  }
+    /**
+     * Default constructor
+     */
+    public Airline() {
+        name = null;
+        flights = null;
+    }
 
-  public void addFlight(AbstractFlight flight) {
-    this.flights.add(flight);
-  }
+    /**
+     * Initializes name of airline with the given string and initializes empty list of flights.
+     * @param name Name of the Airline
+     */
+    public Airline(String name) {
+        this.name = name;
+        flights = new ArrayList<>();
+    }
 
-  public Collection getFlights() {
-    return this.flights;
-  }
+    /**
+     * Returns the name of the airline
+     * @return returns the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Adds the given flight to the list of flights
+     * @param flight add a flight to the list of Flight
+     */
+    public void addFlight(AbstractFlight flight) {
+        flights.add((Flight) flight);
+        Collections.sort(flights);
+    }
+
+    /**
+     * returns the list of flights as a Collection
+     * @return returns the list of Flight as a Collection
+     */
+    public Collection<Flight> getFlights() {
+        return flights;
+    }
 }

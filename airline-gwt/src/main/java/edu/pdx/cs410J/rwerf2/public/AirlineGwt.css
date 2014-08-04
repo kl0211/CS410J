@@ -1,0 +1,46 @@
+.flightListHeader {
+    background-color: #2062B8;
+    color: white;
+    font-style: italic;
+}
+
+.flightList {
+    border: 1px solid silver;
+    padding: 2px;
+    margin-bottom:6px;
+}
+
+.flightListNumericColumn {
+    text-align: right;
+    width:8em;
+}
+
+.addPanelLabel {
+    margin-left: 6px;
+}
+
+.addPanel {
+    border: 1px solid blue;
+    padding: 2px;
+    margin-left: 6px;
+}
+
+.searchPanelLabel {
+    margin-left: 6px;
+}
+
+.searchPanel {
+    border: 1px solid green;
+    padding: 2px;
+    margin-left: 6px;
+}
+
+.helpPanelLabel {
+    margin-left: 6px;
+}
+
+.helpPanel {
+    border: 1px solid red;
+    padding: 2px;
+    margin-left: 64px;
+}
