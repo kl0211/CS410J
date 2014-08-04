@@ -22,4 +22,6 @@ public interface FlightServiceAsync {
      * @param async
      */
     void updateFlights(String name, Flight flight, AsyncCallback<ArrayList<Airline>> async);
+
+    void searchFlights(String name, String src, String dest, AsyncCallback<String> async);
 }

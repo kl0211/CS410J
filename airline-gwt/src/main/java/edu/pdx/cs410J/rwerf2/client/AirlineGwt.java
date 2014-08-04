@@ -40,7 +40,6 @@ public class AirlineGwt implements EntryPoint {
                    helpButton = new Button("README");
     private DateTimeFormat format = DateTimeFormat.getFormat("MM/dd/yyyy hh:mm a");
 
-
     public void onModuleLoad() {
         flightTable.setText(0, 0, "Airline");
         flightTable.setText(0, 1, "Flight Number");
@@ -62,6 +61,8 @@ public class AirlineGwt implements EntryPoint {
         departTimeInput.getElement().setPropertyString("placeholder", "mm/dd/yyyy hh:mm am/pm");
         destInput.getElement().setPropertyString("placeholder", "XYZ");
         arriveTimeInput.getElement().setPropertyString("placeholder", "mm/dd/yyyy hh:mm am/pm");
+        srcSearch.getElement().setPropertyString("placeholder", "XYZ");
+        destSearch.getElement().setPropertyString("placeholder", "XYZ");
 
         addPanel.add(airlineLabel);
         addPanel.add(airlineNameInput);
@@ -171,6 +172,31 @@ public class AirlineGwt implements EntryPoint {
                 async.updateFlights(airlineNameInput.getText(), newFlight, callback);
             }
         });
+        searchFlightButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                if (airlineNameSearch.getText().isEmpty()) {
+                    Window.alert("You must enter an airline name");
+                    return;
+                }
+                if (!isValidAirportCode(srcSearch.getText())) return;
+                if (!isValidAirportCode(destSearch.getText())) return;
+                if (async == null)
+                    async = GWT.create(FlightService.class);
+                AsyncCallback<String> callback = new AsyncCallback<String>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Window.alert(caught.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        Window.alert(result);
+                    }
+                };
+                async.searchFlights(airlineNameSearch.getText(), srcSearch.getText(), destSearch.getText(), callback);
+            }
+        });
         helpButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -190,9 +216,9 @@ public class AirlineGwt implements EntryPoint {
                 flightTable.setText(rowCount, 0, airline.getName());
                 flightTable.setText(rowCount, 1, String.valueOf(flight.getNumber()));
                 flightTable.setText(rowCount, 2, flight.getSource());
-                flightTable.setText(rowCount, 3, flight.getDepartureString());
+                flightTable.setText(rowCount, 3, format.format(flight.getDeparture()));
                 flightTable.setText(rowCount, 4, flight.getDestination());
-                flightTable.setText(rowCount, 5, flight.getArrivalString());
+                flightTable.setText(rowCount, 5, format.format(flight.getArrival()));
             }
         }
     }

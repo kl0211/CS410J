@@ -29,4 +29,5 @@ public interface FlightService extends RemoteService {
      */
     public ArrayList<Airline> updateFlights(String name, Flight flight);
 
+    public String searchFlights(String name, String src, String dest);
 }
