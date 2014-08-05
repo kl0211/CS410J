@@ -256,28 +256,25 @@ public class AirlineGwt implements EntryPoint {
     }
 
     static String readMe() {
-        return "*************************************************************\n" +
-                "edu.pdx.cs410J.rwerf2.Project4 \"Airline\" By Rob Werfelmann.           \n" +
-                "Project4 is an application which stores Airlines containing Flights     \n" +
-                "on a server. It supports specifying host names and ports.               \n" +
-                "It supports the the following options:\n -print, -README, " +
-                "-host, -port, -search                                                 \n\n" +
-                "-print will print out the flights of an added airline after             \n" +
-                "adding a flight. This includes printing out flights which were          \n" +
-                "written to the server.                                                  \n" +
-                "-README will print this message and exit, regardless if there           \n" +
-                "are other arguments.                                                    \n" +
-                "-host and -port specify the host name on which the server is located    \n" +
-                "and which port it is listening. If host and port are not specified,     \n" +
-                "then host and port will default to \"localhost:8080\"                   \n" +
-                "-search fetches all flights from airline \"name\" that Originate from   \n" +
-                "airport \"src\" and arrive at airport \"dest\" that are on the server.\n\n" +
-                "Example Usage:\n java edu.pdx.cs410J.rwerf2.Project4 -print " +
-                "\"Alaska Airlines\" \\\n 101 PDX 7/4/2014 12:00 pm SEA 07/04/2014 12:40 pm\n\n" +
-                " java edu.pdx.cs410J.rwerf2.Project4 -host cs.pdx.edu -port 2020 \\     \n" +
-                " united \"United Airlines\" 2453 LAX 12/12/2013 12:40 am PDX \\         \n" +
-                " 12/12/2013 2:40 am\n\n" +
-                " java edu.pdx.cs410J.rwerf2.Project4 -search \"Alaska Airlines\" PDX SEA\n" +
-                "***************************************************************";
+        return "Welcome to the help file for this airline web application using" +
+               " Google Web Toolkit. You've managed to click the help button, so" +
+               " you probably know what that button does. The rest of the window" +
+               " is divided into 3 parts:\n\n" +
+               "Under Airlines and Flights is a table showing all flight" +
+               " information for all airlines. The flights are sorted by the" +
+               " departing airport code and then by departing time.\n\n" +
+               "Under Add a new flight are input boxes to add info for a" +
+               " new airline and/or flight. The Airline field must be a" +
+               " non-empty String. The Flight Number must be filled with only" +
+               " numbers. The departing and arriving airports must be a valid" +
+               " three-letter airport code. The departing and arriving dates" +
+               " must be in format mm/dd/yyyy hh:mm am/pm.\n\n" +
+               "Under Search for flights are input boxes for search information" +
+               " for existing flights. Searching requires the Airline name," +
+               " departing airport and arriving airport codes. The format for" +
+               " the airport codes follow the same requirements as for adding a" +
+               " new flight. Successful searches will display the flights in a" +
+               "pop-up window in a more human-readable display.\n\n\n" +
+               "Copyright (C) 2014 Rob Werfelmann\n";
     }
 }
