@@ -194,7 +194,8 @@ public class AirlineGwt implements EntryPoint {
                         Window.alert(result);
                     }
                 };
-                async.searchFlights(airlineNameSearch.getText(), srcSearch.getText(), destSearch.getText(), callback);
+                async.searchFlights(airlineNameSearch.getText(), srcSearch.getText().toUpperCase(),
+                                    destSearch.getText().toUpperCase(), callback);
             }
         });
         helpButton.addClickHandler(new ClickHandler() {
