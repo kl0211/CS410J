@@ -45,6 +45,11 @@ public class FlightServiceImpl extends RemoteServiceServlet implements FlightSer
         if (airline == null) {
             airline = new Airline(name);
         }
+        for (Flight flights : airline.getFlights()) {
+            if (airline.getName().equals(name) && flight.getNumber() == flights.getNumber()) {
+                return null;
+            }
+        }
         airline.addFlight(flight);
         airlines.put(name, airline);
         list.addAll(airlines.values());

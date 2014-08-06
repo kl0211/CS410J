@@ -126,17 +126,21 @@ public class AirlineGwt implements EntryPoint {
             }
         };
         async.updateFlights(callback);
-
-
+        airlineNameInput.setMaxLength(24);
+        
         addFlightButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent clickEvent) {
-                if (airlineNameInput.getText().isEmpty()) {
+                final String airlineName = airlineNameInput.getText(), src = srcInput.getText().toUpperCase(),
+                       dest = destInput.getText().toUpperCase();
+                final int flightNumber;
+                Date departTime, arriveTime;
+                if (airlineName.isEmpty()) {
                     Window.alert("You must enter an airline name");
                     return;
                 }
                 if (!isValidFlightNumber(flightNumberInput.getText())) return;
-                if (!isValidAirportCode(srcInput.getText())) return;
-                Date departTime, arriveTime;
+                flightNumber = Integer.parseInt(flightNumberInput.getText());
+                if (!isValidAirportCode(src)) return;
                 try {
                     departTime = format.parseStrict(departTimeInput.getValue());
                 } catch (IllegalArgumentException ex) {
@@ -144,7 +148,7 @@ public class AirlineGwt implements EntryPoint {
                                  "\"mm/dd/yyyy hh:mm am/pm\" and must be a valid date");
                     return;
                 }
-                if (!isValidAirportCode(destInput.getText())) return;
+                if (!isValidAirportCode(dest)) return;
                 try {
                     arriveTime = format.parseStrict(arriveTimeInput.getValue());
                 } catch (IllegalArgumentException ex) {
@@ -152,9 +156,7 @@ public class AirlineGwt implements EntryPoint {
                             "\"mm/dd/yyyy hh:mm am/pm\" and must be a valid date");
                     return;
                 }
-                Flight newFlight = new Flight(Integer.parseInt(flightNumberInput.getText()),
-                                              srcInput.getText().toUpperCase(), departTime,
-                                              destInput.getText().toUpperCase(), arriveTime);
+                Flight newFlight = new Flight(flightNumber, src, departTime, dest, arriveTime);
 
                 if (async == null)
                     async = GWT.create(FlightService.class);
@@ -166,10 +168,21 @@ public class AirlineGwt implements EntryPoint {
 
                     @Override
                     public void onSuccess(ArrayList<Airline> result) {
+                        if (result == null) {
+                            Window.alert("Airline \"" + airlineName + "\" already " +
+                                    "contains flight " + flightNumber);
+                            return;
+                        }
                         updateTable(result);
+                        airlineNameInput.setText("");
+                        flightNumberInput.setText("");
+                        srcInput.setText("");
+                        departTimeInput.setText("");
+                        destInput.setText("");
+                        arriveTimeInput.setText("");
                     }
                 };
-                async.updateFlights(airlineNameInput.getText(), newFlight, callback);
+                async.updateFlights(airlineName, newFlight, callback);
             }
         });
         searchFlightButton.addClickHandler(new ClickHandler() {
@@ -196,6 +209,9 @@ public class AirlineGwt implements EntryPoint {
                 };
                 async.searchFlights(airlineNameSearch.getText(), srcSearch.getText().toUpperCase(),
                                     destSearch.getText().toUpperCase(), callback);
+                airlineNameSearch.setText("");
+                srcSearch.setText("");
+                destSearch.setText("");
             }
         });
         helpButton.addClickHandler(new ClickHandler() {
