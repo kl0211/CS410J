@@ -15,7 +15,6 @@ target/
 .idea/
 app/
 dependency-reduced-pom.xml
-*.html
 *.bat
 *.sh
 *.properties
