@@ -56,6 +56,16 @@ public class FlightServiceImpl extends RemoteServiceServlet implements FlightSer
         return list;
     }
 
+    /**
+     * Returns a string containing the prettyPrinted flights
+     * @param name
+     *      The name of the airline
+     * @param src
+     *      The name of the departing airport
+     * @param dest
+     *      The name of the arriving airport
+     * @return
+     */
     public String searchFlights(String name, String src, String dest) {
         Airline airline = airlines.get(name);
         if (airline == null)

@@ -40,6 +40,9 @@ public class AirlineGwt implements EntryPoint {
                    helpButton = new Button("README");
     private DateTimeFormat format = DateTimeFormat.getFormat("MM/dd/yyyy hh:mm a");
 
+    /**
+     * This function is called whenever a browser loads the page
+     */
     public void onModuleLoad() {
         flightTable.setText(0, 0, "Airline");
         flightTable.setText(0, 1, "Flight Number");
@@ -224,7 +227,11 @@ public class AirlineGwt implements EntryPoint {
         rootPanel.add(mainPanel);
     }
 
-
+    /**
+     * Updates the flex table by overwriting everything with the list provided
+     * @param result
+     *          The list of airlines and flights to be added to the table
+     */
     private void updateTable(ArrayList<Airline> result) {
         int rowCount = 0;
         for (Airline airline : result) {
@@ -272,6 +279,11 @@ public class AirlineGwt implements EntryPoint {
         return true;
     }
 
+    /**
+     * Returns a String containing the ReadMe
+     * @return
+     *      The string containing the ReadMe
+     */
     static String readMe() {
         return "Welcome to the help file for this airline web application using" +
                " Google Web Toolkit. You've managed to click the help button, so" +

@@ -29,5 +29,16 @@ public interface FlightService extends RemoteService {
      */
     public ArrayList<Airline> updateFlights(String name, Flight flight);
 
+    /**
+     * Returns a string containing the PrettyPrinted flights that are being searched
+     * @param name
+     *      The name of the airline
+     * @param src
+     *      The name of the departing airport
+     * @param dest
+     *      The name of the arriving airport
+     * @return
+     *      The string with the PrettyPrinted flights
+     */
     public String searchFlights(String name, String src, String dest);
 }
